@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>管理员管理-cc</title>
+    <link rel="stylesheet" type="text/css" href="css/css.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="bootstrap-3.3.7-dist/js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/usertable.js"></script>
+    <script type="text/javascript" src="login/laydate/laydate.js"></script>
+</head>
+
+<body>
+<div id="pageAll">
+    <div class="pageTop">
+        <div class="page">
+            <img src="img/coin02.png"/><span><a href="main.html">首页</a> / 用户管理 /</span>&nbsp;用户列表
+        </div>
+    </div>
+
+    <div class="page">
+        <!-- user页面样式 -->
+        <div class="connoisseur">
+            <div class="conform">
+                <div class="cfD">
+                    <input class="userinput" id="uname" type="text" placeholder="输入用户名"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="userbtn" id="selectAll">查找</button>
+                </div>
+            </div>
+            <div class="table_top">
+            <!-- user 表格 显示 -->
+            <div class="conShow panel-body">
+                <table border="1" cellspacing="0" cellpadding="0" class="table">
+                    <thead>
+                    <tr>
+                        <th class="tdColor">序号</th>
+                        <th class="tdColor">编号</th>
+                        <th class="tdColor">用户名</th>
+                        <th class="tdColor">密码</th>
+                        <th class="tdColor">性别</th>
+                        <th class="tdColor">邮箱</th>
+                        <th class="tdColor">出生年月</th>
+                        <th class="tdColor">注册时间</th>
+                        <th class="tdColor">头像</th>
+                        <th class="tdColor">人员类型</th>
+                        <th class="tdColor">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody th:remove="all-but-first" id="userMsg">
+                    <tr>
+                        <td colspan="11">没有查到相应的数据！！！</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!--分页 展示 部分 -->
+                <div align="center">
+                    <ul class="pagination" id="pagenums1">
+                        <li>
+                            <a href="#" class="btn btn-default">1</a>
+                        </li>
+                    </ul>
+                </div>  <!-- 分页展示部分  end-->
+            </div>
+            </div>
+        </div>
+
+    </div>
+    <div style="text-align: center;margin-top:440px">
+        <span>Crater &copy; 2019 mall.com版权所有</span>
+    </div>
+</div>
+<!-- user修改模态框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close glyphicon glyphicon-remove" data-dismiss="modal"
+                        aria-hidden="true">
+                </button>
+                <h5 class="modal-title" id="myModalLabel">
+                    修改用户信息
+                </h5>
+            </div>
+
+            <div class="modal-body">
+                <div style="padding: 10px 100px 10px;">
+                    <input type="hidden" id="userId"/>
+                    <div class="input-group">
+                        <span class="input-group-addon ">&nbsp;&nbsp;用户名</span>
+                        <input type="text" class="form-control" id="username">
+
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;密码</span>
+                        <input type="text" class="form-control" id="upwd">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;邮箱</span>
+                        <input type="text" class="form-control" id="uemail">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">注册时间</span>
+                        <input type="text" class="form-control" id="ucreatedate">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">激活状态</span>
+                        <div align="center">
+                            <label class="radio-inline">
+                                <input type="radio" name="ustatus" id="ustatus1" value="1">激活&nbsp;&nbsp;
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="ustatus" id="ustatus0" value="0">未激活&nbsp;&nbsp;&nbsp;
+                            </label>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">人员类型</span>
+                        <div align="center">
+                            <input type="radio" name="role" id="role1" value="1">管理员&nbsp;&nbsp;&nbsp;</label>
+                            <label class="radio-inline">
+                                <input type="radio" name="role" id="role0" value="0">普通用户</label>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <div class="modal-footer col-md-offset-3">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="updateUser">
+                    提交更改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!--  模态框end -->
+</body>
+</html>

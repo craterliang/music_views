@@ -57,7 +57,12 @@ td, th {
     text-align: center;
     border: 1px solid #dcdbdb;
 }
-
+.modal-bsody > div > table > tbody > tr >td {
+    border: 0px solid #dcdbdb;
+}
+.modal-bsody > div > table > tbody > tr{
+    border: 1px solid #dcdbdb;
+}
 .tdColor {
     border: 1px solid #dcdbdb;
     height: 40px;

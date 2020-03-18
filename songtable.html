@@ -8,12 +8,12 @@
     <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/font-awesome.4.6.0.css">
     <link rel="stylesheet" type="text/css" href="css/build.css">
-    <link rel="stylesheet" type="text/css" href="css/fileinput.css"/><!--图片上传插件-->
+    <link rel="stylesheet" type="text/css" href="css/fileinput.css"/>
     <script type="text/javascript" src="bootstrap-3.3.7-dist/js/jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/fileinput.js"></script><!--图片上传插件-->
-    <script type="text/javascript" src="js/fileinput_locale_zh.js"></script><!--图片上传插件-->
-    <script type="text/javascript" src="js/producttable.js"></script>
+    <script type="text/javascript" src="js/fileinput.js"></script>
+    <script type="text/javascript" src="js/fileinput_locale_zh.js"></script>
+    <script type="text/javascript" src="js/songtable.js"></script>
 </head>
 <body>
 <div id="pageAll">
@@ -26,25 +26,28 @@
         <div class="connoisseur">
             <div class="cfD">
                 <button class="addbutton" id="addButton">
-                    <span class="glyphicon glyphicon-cloud-upload">添加商品</span>
+                    <span class="glyphicon glyphicon-cloud-upload">添加歌曲</span>
                 </button>
-                <select class="bselect bse" id="catalogid">
                 </select>
-                <select class="bselect" id="brandid">
+                <select class="bselect" id="songStyle">
+                    <option value="-1">歌曲类型</option>
+                    <option value="流行">流行</option>
+                    <option value="摇滚">摇滚</option>
+                    <option value="电子">电子</option>
+                    <option value="说唱">说唱</option>
+                    <option value="轻音乐">轻音乐</option>
+                    <option value="其他">其他</option>
                 </select>
-                <select class="bselect" id="showflag">a
-                    <option value="-1">上/下架</option>
-                    <option value="1">上架</option>
-                    <option value="0">下架</option>
+                <select class="bselect" id="songLu">a
+                    <option value="-1">歌曲语种</option>
+                    <option value="华语">华语</option>
+                    <option value="欧美">欧美</option>
+                    <option value="日语">日语</option>
+                    <option value="韩语">韩语</option>
+                    <option value="粤语">粤语</option>
+                    <option value="其他">其他</option>
                 </select>
-                <select class="bselect" id="goodflag">a
-                    <option value="-1">是否精品</option>
-                    <option value="1">是</option>
-                    <option value="0">否</option>
-                </select>
-                <input class="vinput" type="text" id="lowprice" placeholder="最低价格"/>
-                <input class="vinput vpr" type="text" id="upprice" placeholder="最高价格"/>
-                <input class="vinput vpr" type="text" id="productname" placeholder="商品名称"/>
+                <input class="vinput vpr" type="text" id="SongName" placeholder="歌曲名称"/>
                 <button class="button" id="findButton">
                     <span class="glyphicon glyphicon-search"></span>
                 </button>
@@ -57,20 +60,17 @@
                     <thead>
                     <tr>
                         <th class="tdColor">序号</th>
-                        <!--<th class="tdColor">编号</th>-->
-                        <th class="tdColor">商品图片</th>
-                        <th class="tdColor">商品名称</th>
-                        <th class="tdColor">货号</th>
-                        <th class="tdColor">商品分类</th>
-                        <th class="tdColor">品牌</th>
-                        <th class="tdColor">市场价格</th>
-                        <th class="tdColor">库存</th>
-                        <th class="tdColor">上架</th>
-                        <th class="tdColor">精品</th>
+                        <th class="tdColor">歌曲名</th>
+                        <th class="tdColor">歌手</th>
+                        <th class="tdColor">歌曲类型</th>
+                        <th class="tdColor">语种</th>
+                        <th class="tdColor">歌曲路径</th>
+                        <th class="tdColor">时长</th>
+                        <th class="tdColor">专辑</th>
                         <th class="tdColor" width="150px">操作</th>
                     </tr>
                     </thead>
-                    <tbody th:remove="all-but-first" id="productMsg">
+                    <tbody th:remove="all-but-first" id="songMsg">
                     <tr>
                         <td colspan="11">没有查到相应的数据！！！</td>
                     </tr>
@@ -89,6 +89,111 @@
     </div>
     <!-- balance页面样式end -->
 </div>
+<!-- product添加模态框 -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close glyphicon glyphicon-remove" data-dismiss="modal"
+                        aria-hidden="true">
+                </button>
+                <h5 class="modal-title" id="addModalLabel">
+                    添加歌曲→第一步
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div style="padding: 10px 100px 10px;">
+                    <div class="input-group">
+                        <span class="input-group-addon">添加歌曲</span>
+                        <form id="myForm_add" method="post" enctype="multipart/form-data">
+                            <input id="audio_add" class="file" name="file" type="file"  accept="audio/mp3" >
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer col-md-offset-3">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="addSongBtn">
+                    下一步
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!--  模态框end -->
+<div class="modal fade" id="addModalNext" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close glyphicon glyphicon-remove" data-dismiss="modal"
+                        aria-hidden="true">
+                </button>
+                <h5 class="modal-title" id="addModalLabel1">
+                    添加歌曲→第二步
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div style="padding: 10px 100px 10px;">
+                    <div class="input-group">
+                        <span class="input-group-addon">歌曲名称</span>
+                        <input type="text" class="form-control" id="productname_add" disabled>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">歌手</span>
+                        <select id="catalogid_add1" class="form-control">
+                        </select>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">歌曲类型</span>
+                        <select id="catalogid_add" class="form-control">
+                        </select>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">歌曲语种</span>
+                        <select id="brandid_add" class="form-control">
+                        </select>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">所属专辑</span>
+                        <input type="text" class="form-control" id="weight_add" placeholder="单位g">
+                    </div>
+                    <br>
+                    <div class="form-group ">
+                        <div align="center" class="checkbox checkbox-primary">
+                            <input id="showflag_add" class="styled" type="checkbox" value="1">
+                            <label for="showflag_add">
+                                是否上架
+                            </label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input id="goodflag_add" class="styled" type="checkbox" value="1">
+                            <label for="goodflag_add">
+                                是否精品
+                            </label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input id="payflag_add" class="styled" type="checkbox" value="1">
+                            <label for="payflag_add">
+                                是否包邮
+                            </label>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <div class="modal-footer col-md-offset-3">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="addSongBtnNext">
+                    下一步
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!--  模态框end -->
+
+
+
 <!-- product修改模态框 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -212,6 +317,7 @@
     </div><!-- /.modal-dialog -->
 </div><!--  模态框end -->
 <!-- product添加模态框 -->
+<!--
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -244,7 +350,7 @@
                     <br>
                     <div class="input-group">
                         <span class="input-group-addon">所属分类</span>
-                        <!-- <input type="text" class="form-control" id="ucreatedate">-->
+                        &lt;!&ndash; <input type="text" class="form-control" id="ucreatedate">&ndash;&gt;
                         <select id="catalogid_add" class="form-control">
                         </select>
                     </div>
@@ -252,6 +358,7 @@
                     <div class="input-group">
                         <span class="input-group-addon">所属品牌</span>
                         <select id="brandid_add" class="form-control">
+
                         </select>
                     </div>
                     <br>
@@ -327,20 +434,22 @@
                     提交更改
                 </button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!--  模态框end -->
+        </div>&lt;!&ndash; /.modal-content &ndash;&gt;
+    </div>&lt;!&ndash; /.modal-dialog &ndash;&gt;
+</div>&lt;!&ndash;  模态框end &ndash;&gt;
+-->
+
 <script type="text/javascript">
     //初始化fileinput控件（第一次初始化）
     $('#img_update').fileinput({
         'language': 'zh', //设置语言
-        'allowedFileExtensions': ['jpg', 'png', 'gif'],//接收的文件后缀,
+        'allowedFileExtensions': ['mp3'],//接收的文件后缀,
         'showUpload': false, //是否显示上传按钮
         'showCaption': true,//是否显示标题
     });
-    $('#img_add').fileinput({
+    $('#audio_add').fileinput({
         'language': 'zh', //设置语言
-        'allowedFileExtensions': ['jpg', 'png', 'gif'],//接收的文件后缀,
+        'allowedFileExtensions': ['mp3'],//接收的文件后缀,
         'showUpload': false, //是否显示上传按钮
         'showCaption': true,//是否显示标题
     });

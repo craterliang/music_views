@@ -57,11 +57,11 @@ td, th {
     text-align: center;
     border: 1px solid #dcdbdb;
 }
-.modal-bsody > div > table > tbody > tr >td {
-    border: 0px solid #dcdbdb;
+#userUpdate > div {
+    margin-top: 7px;
 }
-.modal-bsody > div > table > tbody > tr{
-    border: 1px solid #dcdbdb;
+#userAdd > div {
+    margin-top: 7px;
 }
 .tdColor {
     border: 1px solid #dcdbdb;
@@ -426,12 +426,12 @@ td, th {
 }
 
 .cfD {
-    margin-top: 20px;
+    margin-top: 5px;
     width: auto;
     height: auto;
-    border: 1px solid #CCCCCC;
-    background: hsla(280, 9%, 80%, 0.1);
-    border-radius: 10px;
+    border-top: 1px solid #CCCCCC;
+   /* background: hsla(280, 9%, 80%, 0.1);*/
+   /* border-radius: 10px;*/
 }
 
 .cfD select {
@@ -705,13 +705,14 @@ td, th {
 /*心愿管理页面CSS、、约见管理页面CSS end*/
 .cfD .userinput {
     margin-left: 20px;
-    margin-top: 12px;
-    margin-bottom: 12px;
+    margin-top: 7px;
+    margin-bottom: 7px;
     width: 220px;
     height: 37px;
     border: 1px solid #ccc;
     text-indent: 15px;
     color: #999;
+    border-radius: 10px;
 }
 
 .cfD .catalogbtn {
@@ -728,7 +729,7 @@ td, th {
 }
 
 .cfD .userbtn {
-    margin-left: 60px;
+    /*margin-left: 60px;*/
     width: 120px;
     height: 37px;
     border: none;

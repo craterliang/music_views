@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>管理员管理-cc</title>
+    <link rel="stylesheet" type="text/css" href="css/css.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/fileinput.css"/><!--图片上传插件-->
+    <script type="text/javascript" src="bootstrap-3.3.7-dist/js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/fileinput.js"></script><!--图片上传插件-->
+    <script type="text/javascript" src="js/fileinput_locale_zh.js"></script><!--图片上传插件-->
+    <script type="text/javascript" src="js/singertable.js"></script>
+    <script type="text/javascript" src="login/laydate/laydate.js"></script>
+</head>
+
+<body>
+<div id="pageAll">
+    <div class="pageTop">
+        <div class="page">
+            <img src="img/coin02.png"/><span><a href="main.html">首页</a> / 用户管理 /</span>&nbsp;歌手列表
+        </div>
+    </div>
+
+    <div class="page">
+        <!-- user页面样式 -->
+        <div class="connoisseur">
+            <div class="conform">
+                <div class="cfD">
+                    <input class="userinput" id="uname" type="text" placeholder="输入歌手名"/>
+                    <button class="userbtn" id="selectAll">查找</button>
+                    <button class="userbtn" id="addSinger" style="margin-left: 5px">添加歌手</button>
+                </div>
+            </div>
+            <div class="table_top">
+            <!-- user 表格 显示 -->
+            <div class="conShow panel-body">
+                <table border="1" cellspacing="0" cellpadding="0" class="table">
+                    <thead>
+                    <tr>
+                        <th class="tdColor">编号</th>
+                        <th class="tdColor">歌手</th>
+                        <th class="tdColor">头像</th>
+                        <th class="tdColor">性别</th>
+                        <th class="tdColor">歌手类型</th>
+                        <th class="tdColor" style="width: 260px">歌手介绍</th>
+                        <th class="tdColor">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody th:remove="all-but-first" id="userMsg">
+                    <tr>
+                        <td colspan="11">没有查到相应的数据！！！</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!--分页 展示 部分 -->
+                <div align="center">
+                    <ul class="pagination" id="pagenums1">
+                        <li>
+                            <a href="#" class="btn btn-default">1</a>
+                        </li>
+                    </ul>
+                </div>  <!-- 分页展示部分  end-->
+            </div>
+            </div>
+        </div>
+
+    </div>
+    <div style="text-align: center;margin-top:440px">
+        <span>Crater &copy; 2019 mall.com版权所有</span>
+    </div>
+</div>
+<!-- user修改模态框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close glyphicon glyphicon-remove" data-dismiss="modal"
+                        aria-hidden="true">
+                </button>
+                <h5 class="modal-title" id="myModalLabel">
+                    修改歌手信息
+                </h5>
+            </div>
+
+            <div class="modal-bsody" >
+                <div style="padding: 10px 100px 10px;" id="userUpdate">
+                    <input type="hidden" id="userId"/>
+
+                    <div class="input-group" >
+                        <span class="input-group-addon ">歌手名称</span>
+                        <input type="text" class="form-control" id="singerName">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">歌手类型</span>
+                        <select id="singerType" class="form-control">
+                            <option value='华语男歌手'>华语男歌手</option>
+                            <option value='华语男歌手'>华语女歌手</option>
+                            <option value='日韩男歌手'>日韩男歌手</option>
+                            <option value='日韩女歌手'>日韩女歌手</option>
+                            <option value='欧美男歌手'>欧美男歌手</option>
+                            <option value='欧美女歌手'>欧美女歌手</option>
+                        </select>
+                        <!--<input type="text" class="form-control" id="singerType">-->
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">歌手性别</span>
+                        <div align="center" style="height: 30px;border: 1px solid #ccc;border-radius:4px;">
+                            <label class="radio-inline">
+                                <input type="radio" name="sSex" id="sSex1" value="1">男&nbsp;&nbsp;&nbsp;&nbsp;
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="sSex" id="sSex0" value="0">女&nbsp;&nbsp;&nbsp;
+                            </label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">歌手介绍</span>
+                        <textarea class="form-control" rows="4" id="singerDesc_up" style="height: 70px"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <input type="hidden" id="singerImge1"/>
+                        <span class="input-group-addon">歌手头像</span>
+                        <div style="height: 110px;border: 1px solid #ccc;border-radius:4px;">
+                        <img src="" id="singerImge" class="update_img"/>
+                        <form id="myForm"  method="post" enctype="multipart/form-data">
+                            <input id="img_update" class="file" name="file" type="file" accept="image/*">
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer col-md-offset-3">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="updateSinger">
+                    提交更改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!--  模态框end -->
+<!-- 添加模态框 -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close glyphicon glyphicon-remove" data-dismiss="modal"
+                        aria-hidden="true">
+                </button>
+                <h5 class="modal-title" id="myModalLabelAdd">
+                    添加歌手
+                </h5>
+            </div>
+
+            <div class="modal-bsody" >
+                <div style="padding: 10px 100px 10px;" id="userAdd">
+                    <div class="input-group" >
+                        <span class="input-group-addon ">歌手名称</span>
+                        <input type="text" class="form-control" id="singerNameAdd">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">歌手类型</span>
+                        <select id="singerTypeAdd" class="form-control">
+                            <option value='华语男歌手'>华语男歌手</option>
+                            <option value='华语男歌手'>华语女歌手</option>
+                            <option value='日韩男歌手'>日韩男歌手</option>
+                            <option value='日韩女歌手'>日韩女歌手</option>
+                            <option value='欧美男歌手'>欧美男歌手</option>
+                            <option value='欧美女歌手'>欧美女歌手</option>
+                        </select>
+                        <!--<input type="text" class="form-control" id="singerType">-->
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">歌手性别</span>
+                        <div align="center" style="height: 30px;border: 1px solid #ccc;border-radius:4px;">
+                            <label class="radio-inline">
+                                <input type="radio" name="sSexAdd" id="sSex1Add" value="1" checked>男&nbsp;&nbsp;&nbsp;&nbsp;
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="sSexAdd" id="sSex0Add" value="0">女&nbsp;&nbsp;&nbsp;
+                            </label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">歌手介绍</span>
+                        <textarea class="form-control" rows="4" id="singerDescAdd" style="height: 70px" ></textarea>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">歌手头像</span>
+                            <form id="myFormAdd"  method="post" enctype="multipart/form-data">
+                                <input id="img_add" class="file" name="file" type="file" accept="image/*">
+                            </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer col-md-offset-3">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="addSingerCommit">
+                    添加
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!--  模态框end -->
+
+<script type="text/javascript">
+    //初始化fileinput控件（第一次初始化）
+    $('#img_update').fileinput({
+        'language': 'zh', //设置语言
+        'allowedFileExtensions': ['jpg', 'png', 'gif'],//接收的文件后缀,
+        'initialCaption': "更换头像",
+        'showUpload': false, //是否显示上传按钮
+        'showCaption': true,//是否显示标题
+        'showPreview':false, //是否显示预览
+    })
+    $('#img_add').fileinput({
+        'language': 'zh', //设置语言
+        'allowedFileExtensions': ['jpg', 'png', 'gif'],//接收的文件后缀,
+        'showUpload': false, //是否显示上传按钮
+        'showCaption': true,//是否显示标题
+        'showPreview':true, //是否显示预览
+    })
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 
 $(function () {
 
-    //加载商品类别信息/品牌信息
+   /* //加载商品类别信息/品牌信息
     var catalogurl = "http://localhost:8082/tbcatalog/findAllTbcatalog";
     var brandurl = "http://localhost:8082/tbbrand/findAllTbbrand";
     $.ajax({
@@ -35,8 +35,8 @@ $(function () {
                 }
             }
         }
-    });
-    $.ajax({
+    });*/
+    /*$.ajax({
         type: "post",
         url: brandurl,
         async: false,
@@ -61,35 +61,39 @@ $(function () {
 
             }
         }
-    });//加载信息  end
+    });//加载信息  end*/
 
     //自动加载列表
-    showProduct(1);
+    showSong(1);
     var pageNum;
     //监控模态框
     $('#myModal').on('hide.bs.modal', function () {
         $(".fileinput-remove-button").click();
-    })
+    });
     $('#addModal').on('hide.bs.modal', function () {
         $(".fileinput-remove-button").click();
-    })
+    });
+
     //查询按钮
     $("#findButton").click(function () {
-        showProduct(1);
+        showSong(1);
     });
     // 添加商品
     $("#addButton").click(function () {
         $('#addModal').modal('show');
     });
     //添加商品提交按钮
-    $("#addproductBtn").click(function () {
-        if (document.getElementById("img_add").value == null || document.getElementById("img_add").value === undefined) {
-            alert("请选择上传图片");
+    $("#addSongBtn").click(function () {
+        $('#addModal').modal('hide');
+        addSong(data);
+
+        /*if (document.getElementById("audio_add").value == null || document.getElementById("audio_add").value === undefined) {
+            alert("请选择歌曲");
         } else {
             var formData = new FormData($("#myForm_add")[0]);
             $.ajax({
                 //接口地址
-                url: 'http://localhost:8082/ImgUpload',
+                url: 'http://localhost:8082/audioUpload',
                 type: 'POST',
                 dateType: "JSON",
                 data: formData,
@@ -98,30 +102,22 @@ $(function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    addProduct(data);
+                    //alert("成功了:"+data.songName+"--"+data.singerName+"--"+data.album+"--"+data.duration+"--"+data.uuid)
+                    $('#addModal').modal('hide');
+                    addSong(data);
                 },
                 error: function (returndata) {
                     alert("失败了！图片没有添加成功");
                     //请求异常的回调
                 }
             });
-        }
+        }*/
     });
 
-    //添加商品
-    function addProduct(data) {
-        var show = 0;
-        var pay = 0;
-        var good = 0;
-        if ($("input[id='showflag_add']:checked").val()) {
-            show = 1;
-        }
-        if ($("input[id='payflag_add']:checked").val()) {
-            pay = 1;
-        }
-        if ($("input[id='goodflag_add']:checked").val()) {
-            good = 1;
-        }
+    //添加歌曲
+    function addSong(data) {
+        $('#addModalNext').modal('show');
+
         var url = "http://localhost:8082/tbproduct/insertProduct";
         var datas = {
             "productname": $("#productname_add").val(),
@@ -146,7 +142,7 @@ $(function () {
             $('#addModal').modal('hide');
             if (result == 1) {
                 alert("添加商品成功");
-                showProduct(1);
+                showSong(1);
                 $("#productname_add").val("");
                 $("#productsn_add").val("");
                 $("#price_add").val("");
@@ -168,23 +164,17 @@ $(function () {
         });
     }//添加商品  end
     //显示商品列表
-    function showProduct(pageNumber) {
-        var url = "http://localhost:8082/tbproduct/findProductColumn";
+    function showSong(pageNumber) {
+        var url = "http://localhost:8082/song/findSongColumn";
         var datas = {
-            "productname": $("#productname").val(),
-            "catalogid": $("#catalogid").val(),
-            "brandid": $("#brandid").val(),
-            "showflag": $("#showflag").val(),
-            "lowprice": $("#lowprice").val(),
-            "upprice": $("#upprice").val(),
-            "goodflag": $("#goodflag").val(),
+            "songName": $("#SongName").val(),
+            "songStyle": $("#songStyle").val(),
+            "songLangue": $("#songLu").val(),
             "pageNumber": pageNumber,
-            "pagesize":5
 
         };
-
         $.post(url, datas, function (result) {
-            var tbody = $("#productMsg");
+            var tbody = $("#songMsg");
             tbody.find("tr").remove();
             var productList = result.list;
             //进数据库  没有符合条件的数据
@@ -200,26 +190,14 @@ $(function () {
                 for (var i = 0; i < productList.length; i++) {
                     var tr = $("<tr></tr>");
                     tr.append("<td>" + (pageNum * pageSize - pageSize + i + 1) + "</td>");
-                    tr.append("<td><a href='http://localhost:8082/" + productList[i].picpath + ".jpg' " +
-                        "target='_blank'><img src='http://localhost:8082/" + productList[i].picpath + ".jpg' width='40px' height='40px' /></a>  </td>");
-                    tr.append("<td>" + productList[i].productname + "</td>");
-                    tr.append("<td>" + productList[i].productsn + "</td>");
-                    tr.append("<td>" + productList[i].catalog + "</td>");
-                    tr.append("<td >" + productList[i].brandname + "</td>");
-                    tr.append("<td >" + productList[i].price + "</td>");
-                    tr.append("<td >" + productList[i].amount + "</td>");
-                    if (productList[i].showflag == 1) {
-                        tr.append("<td style=\"color: rgb(7, 230, 7);\"><span class='glyphicon glyphicon-ok'></span></td>");
-                    } else {
-                        tr.append("<td style=\"color: rgb(230, 7, 7);\"><span class='glyphicon glyphicon-remove'></span></td>");
-                    }
-                    if (productList[i].goodflag == 1) {
-                        tr.append("<td style=\"color: rgb(7, 230, 7);\"><span class='glyphicon glyphicon-ok'></span></td>");
-                    } else {
-                        tr.append("<td style=\"color: rgb(230, 7, 7);\"><span class='glyphicon glyphicon-remove'></span></td>");
-                    }
-                    tr.append("<td width='200px'><a href='" + productList[i].id + "' style='font-size:10px' class='productImg btn btn-primary'>图片管理</a> <a href='" + productList[i].id + "' style='font-size:10px' class='updateBtn btn btn-danger'>修改</a> <a href='" + productList[i].id + "' class='deleteHref btn btn-default' style='font-size:10px'>删除</a> </td>");
-
+                    tr.append("<td>" + productList[i].songName + "</td>");
+                    tr.append("<td>" + productList[i].singerName + "</td>");
+                    tr.append("<td>" + productList[i].songStyle + "</td>");
+                    tr.append("<td>" + productList[i].songLangue + "</td>");
+                    tr.append("<td>" + productList[i].songPath + "</td>");
+                    tr.append("<td >" + productList[i].songTime + "</td>");
+                    tr.append("<td >" + productList[i].songAlbum + "</td>");
+                    tr.append("<td width='200px'><a href='" + productList[i].songId + "' style='font-size:10px' class='updateBtn btn btn-danger'>修改</a> <a href='" + productList[i].songId + "' class='deleteHref btn btn-default' style='font-size:10px'>删除</a> </td>");
                     tbody.append(tr);
                 }
                 // ---分页----------------------------------
@@ -256,7 +234,7 @@ $(function () {
                     /*分页的页码  点击 触发的 事件 */
                     $(".pageNumBtn").click(function () {
                         var pn = $(this).attr("href");
-                        showProduct(pn);
+                        showSong(pn);
                         return false;
                     });
 
@@ -305,14 +283,14 @@ $(function () {
                 //!* 根据Id删除对象
                 $(".deleteHref").click(function () {
                     if (confirm("确定删除吗？")) {
-                        var url = "http://localhost:8082/tbproduct/deleteProductById";
+                        var url = "http://localhost:8082/song/deleteSongById";
                         var datas = {
-                            "productId": $(this).attr("href")
+                            "songId": $(this).attr("href")
                         }
                         $.post(url, datas, function (result) {
                             if (result == 1) {
                                 //alert("删除成功！！！");
-                                showProduct(pageNum);
+                                showSong(pageNum);
                             } else {
                                 alert("删除失败！！！");
                             }
@@ -401,7 +379,7 @@ $(function () {
             $('#myModal').modal('hide');
             if (result == 1) {
                 alert("修改成功");
-                showProduct(pageNum);
+                showSong(pageNum);
             } else {
                 ErroAlert("修改失败！！！");
             }

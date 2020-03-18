@@ -1,19 +1,22 @@
 //usertable模块
     $(function () {
         //自动加载用户列表
-        showUser(1);
+        showSinger(1);
         var pageNum;
         /*点击查询按钮   查询所有员工数据*/
         $("#selectAll").click(function () {
-            showUser(1);
+            showSinger(1);
         });
         //监控模态框，当重新达打开时清空内容
        $('#myModal').on('hide.bs.modal', function () {
             $(".fileinput-remove-button").click();
         });
-        function showUser(pageNumber) {
+        $('#addModal').on('hide.bs.modal', function () {
+            $(".fileinput-remove-button").click();
+        });
+        function showSinger(pageNumber) {
 
-            var url = "http://localhost:8082/user/findAll";
+            var url = "http://localhost:8082/singer/findAll";
             var datas = {
                 "uname": $("#uname").val(),
                 "pageNumber": pageNumber
@@ -21,52 +24,46 @@
             $.post(url, datas, function (result) {
                 var tbody = $("#userMsg");
                 tbody.find("tr").remove();
-                var userList = result.list;
+                var singerList = result.list;
                 //进数据库  没有符合条件的数据
-                if (userList == 0) {
+                if (singerList == 0) {
                     alert("没有符合条件的数据")
                     tbody.append(tr);
                 } else {
                     pageNum = result.pageNum;
                     var pageSize = result.pageSize;
-                    // 循环遍历 userList 获取所有的数据  挂载到  tbody 中
-                    for (var i = 0; i < userList.length; i++) {
+                    // 循环遍历 singerList 获取所有的数据  挂载到  tbody 中
+                    for (var i = 0; i < singerList.length; i++) {
                         var tr = $("<tr></tr>");
-                        tr.append("<td>" + (pageNum * pageSize - pageSize + i + 1) + "</td>");
-                        tr.append("<td>" + userList[i].userId + "</td>");
-                        tr.append("<td>" + userList[i].userName + "</td>");
-                        tr.append("<td>" + userList[i].userPwd + "</td>");
-                        if (userList[i].userSex == 1) {
+                        tr.append("<td>" + singerList[i].singerId + "</td>");
+                        tr.append("<td>" + singerList[i].singerName + "</td>");
+                        tr.append("<td><img src='http://localhost:8082/img/" + singerList[i].singerImage + ".jpg' width='40px' height='40px' /></td>");
+                        if (singerList[i].singerSex == 1) {
                             tr.append("<td>男</td>");
                         } else {
                             tr.append("<td>女</td>");
                         }
-                        tr.append("<td>" + userList[i].userEmail + "</td>");
-                        tr.append("<td >" + userList[i].userBirthday.substring(0, 10) + "</td>");
-                        tr.append("<td >" + userList[i].userRdate + "</td>");
-                        tr.append("<td><img src='http://localhost:8082/img/" + userList[i].userImage + ".jpg' width='40px' height='40px' /></td>");
-                        /*tr.append("<td>" + userList[i].userImage + "</td>");*/
+                        tr.append("<td>" + singerList[i].singerType + "</td>");
 
-                        if (userList[i].userRole == 1) {
-                            tr.append("<td class='hidden-480'><span class='label label-success'>管理员</span></td>");
-                        } else {
-                            tr.append("<td class='hidden-480'><span class='label label-info'>普通用户</span></td>");
-                        }
-                        tr.append("<td><a href='" + userList[i].userId + "'style='font-size:10px' class='updateBtn btn btn-danger'>修改</a><a href='" + userList[i].userId + "' class='deleteHref btn btn-default' style='font-size:10px'>删除</a> </td>");
+                        tr.append("<td>" + singerList[i].singerDesc.substring(0,17)+ "..."+ "</td>");
+                        
+                       /*tr.append("<td>" + singerList[i].userImage + "</td>");*/
+                        
+                        tr.append("<td><a href='" + singerList[i].singerId + "'style='font-size:10px' class='updateBtn btn btn-danger'>修改</a><a href='" + singerList[i].singerId + "' class='deleteHref btn btn-default' style='font-size:10px'>删除</a> </td>");
                         tbody.append(tr);
                     }
 
                     //!* 根据Id删除对象
                     $(".deleteHref").click(function () {
                         if (confirm("确定删除吗？")) {
-                            var url = "http://localhost:8082/user/deleteById";
+                            var url = "http://localhost:8082/singer/deleteById";
                             var datas = {
-                                "userId": $(this).attr("href")
+                                "singerId": $(this).attr("href")
                             }
                             $.post(url, datas, function (result) {
                                 if (result == 1) {
                                     /!*alert("删除成功！！！");*!/
-                                    showUser(pageNum);
+                                    showSinger(pageNum);
                                 } else {
                                     alert("删除失败！！！");
                                 }
@@ -78,28 +75,21 @@
                     //根据根据Id获取对象
                     $(".updateBtn").click(function () {
                         $('#myModal').modal('show');
-                        var url = "http://localhost:8082/user/selectById";
+                        var url = "http://localhost:8082/singer/selectById";
                         var datas = {
                             "Id": $(this).attr("href")
                         };
                         $("#userId").val($(this).attr("href"));
                         $.post(url, datas, function (result) {
-                            $("#userImge1").val(result.userImage);
-                            $("#username").val(result.userName);
-                            $("#upwd").val(result.userPwd);
-                            $("#ucreatedate").val(result.userRdate);
-                            $("#userBirthday").val(result.userBirthday.substring(0, 10));
-                            $("#userImge").attr('src', "http://localhost:8082/img/" + result.userImage + ".jpg");
-                            $("#uemail").val(result.userEmail);
-                            if (result.userRole == 1) {
-                                $("#role1").prop("checked", true);
+                            $("#singerImge1").val(result.singerImage);
+                            $("#singerName").val(result.singerName);
+                            $("#singerType").val(result.singerType);
+                            $("#singerDesc_up").val(result.singerDesc);
+                            $("#singerImge").attr('src', "http://localhost:8082/img/" + result.singerImage + ".jpg");
+                            if (result.singerSex == 1) {
+                                $("#sSex1").prop("checked", true);
                             } else {
-                                $("#role0").prop("checked", true);
-                            }
-                            if (result.userSex == 1) {
-                                $("#uSex1").prop("checked", true);
-                            } else {
-                                $("#uSex0").prop("checked", true);
+                                $("#sSex0").prop("checked", true);
                             }
                         });
 
@@ -138,17 +128,72 @@
                         /*分页超链接的事件*/
                         $(".pageHref").click(function () {
                             var pageNumber = $(this).attr("href");
-                            showUser(pageNumber);
+                            showSinger(pageNumber);
                             return false;
                         });
                     }
                 }
             });
         }
+        //添加歌手
+        $("#addSinger").click(function () {
+            $('#addModal').modal('show');
+        });
+        $("#addSingerCommit").click(function () {
+            if (document.getElementById("img_add").value == null || document.getElementById("img_add").value == "") {
+                alert("歌手头像不能为空！");
+            } else {
+                var formData = new FormData($("#myFormAdd")[0]);
+                $.ajax({
+                    //接口地址
+                    url: 'http://localhost:8082/ImgUpload',
+                    type: 'POST',
+                    dateType: "JSON",
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                        addSinger(data);
+                    },
+                    error: function (returndata) {
+                        alert("头像添加失败了");
+                    }
+                });
+            }
+        });
+        function addSinger(data){
+            var addsex=$("input[name='sSexAdd']:checked").val();
+            var url = "http://localhost:8082/singer/insert";
+            var datas = {
+                "singerName": $("#singerNameAdd").val(),
+                "singerType": $("#singerTypeAdd").val(),
+                "singerDesc": $("#singerDescAdd").val(),
+                "singerSex": addsex,
+                "singerImage": data,
+            };
+            $.post(url, datas, function (result) {
+                $('#addModal').modal('hide');
+                if (result == 1) {
+                    alert("添加成功");
+                    $("#singerNameAdd").val("");
+                    $("#singerDescAdd").val("   bb" +
+                        "" +
+                        "" +
+                        "" +
+                        "") ;
+                    showSinger(pageNum);
+                } else {
+                    alert("添加失败");
+                }
+            });
+        }
         //更新头像
-        $("#updateUser").click(function () {
+        $("#updateSinger").click(function () {
             if (document.getElementById("img_update").value == null || document.getElementById("img_update").value == "") {
-                updateUser($("#userImge1").val(),0);
+                updateSinger($("#singerImge1").val(),0);
             } else {
                 var formData = new FormData($("#myForm")[0]);
                 $.ajax({
@@ -162,7 +207,7 @@
                     contentType: false,
                     processData: false,
                     success: function (data) {
-                        updateUser(data,1);
+                        updateSinger(data,1);
                     },
                     error: function (returndata) {
                         alert("图片修改失败了");
@@ -171,34 +216,26 @@
             }
         });//更新图片 end
         //修改用户信息
-        function updateUser(data,upBool) {
-            var role=$("input[name='role']:checked").val();
-            var sex=$("input[name='uSex']:checked").val();
-            var url = "http://localhost:8082/user/updateUser";
+        function updateSinger(data,upBool) {
+            var sex=$("input[name='sSex']:checked").val();
+            var url = "http://localhost:8082/singer/updateSinger";
             var datas = {
-                "userId": $("#userId").val(),
-                "userName": $("#username").val(),
-                "userPwd": $("#upwd").val(),
-                "userRdate": $("#ucreatedate").val(),
-                "userBirthday": $("#userBirthday").val(),
-                "userEmail": $("#uemail").val(),
-                "userRole": role,
-                "userSex": sex,
-                "userImage": data,
+                "singerId": $("#userId").val(),
+                "singerName": $("#singerName").val(),
+                "singerType": $("#singerType").val(),
+                "singerDesc": $("#singerDesc_up").val(),
+                "singerSex": sex,
+                "singerImage": data,
                 "upBool":upBool
             };
             $.post(url, datas, function (result) {
                 $('#myModal').modal('hide');
                 if (result == 1) {
                     alert("修改成功");
-                    showUser(pageNum);
+                    showSinger(pageNum);
                 } else {
                     alert("修改失败");
                 }
             });
         }
-        //时间选择器初始化
-        laydate.render({
-            elem: '#userBirthday'//指定元素
-        });
     });

@@ -6,8 +6,11 @@
     <title>管理员管理-cc</title>
     <link rel="stylesheet" type="text/css" href="css/css.css"/>
     <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/fileinput.css"/><!--图片上传插件-->
     <script type="text/javascript" src="bootstrap-3.3.7-dist/js/jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/fileinput.js"></script><!--图片上传插件-->
+    <script type="text/javascript" src="js/fileinput_locale_zh.js"></script><!--图片上传插件-->
     <script type="text/javascript" src="js/usertable.js"></script>
     <script type="text/javascript" src="login/laydate/laydate.js"></script>
 </head>
@@ -25,7 +28,7 @@
         <div class="connoisseur">
             <div class="conform">
                 <div class="cfD">
-                    <input class="userinput" id="uname" type="text" placeholder="输入用户名"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input class="userinput" id="uname" type="text" placeholder="输入用户名"/>
                     <button class="userbtn" id="selectAll">查找</button>
                 </div>
             </div>
@@ -84,75 +87,60 @@
                 </h5>
             </div>
 
-            <div class="modal-bsody">
-                <div style="padding: 10px 100px 10px;">
+            <div class="modal-bsody" >
+                <div style="padding: 10px 100px 10px;" id="userUpdate">
                     <input type="hidden" id="userId"/>
-                    <table class="table userUpdate">
-                        <tbody>
-                        <tr>
-                            <td style="border: 0px "><span>用户名</span></td>
-                            <td >
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="lastname">
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>密码</td>
-                            <td>Bangalore</td>
-                        </tr>
-                        <tr>
-                            <td>邮箱</td>
-                            <td>Mumbai</td>
-                        </tr>
-                        <tr>
-                            <td>Uma</td>
-                            <td>Pune</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <!--<div class="input-group">
-                        <span class="input-group-addon ">&nbsp;&nbsp;用户名</span>
-                        <input type="text" class="form-control" id="username">
 
+                    <div class="input-group" >
+                        <span class="input-group-addon ">&nbsp;&nbsp;&nbsp;用户名</span>
+                        <input type="text" class="form-control" id="username">
                     </div>
-                    <br>
-                    <div class="input-group">
-                        <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;密码</span>
-                        <input type="text" class="form-control" id="upwd">
+                    <div class="input-group" style="margin-top: 7px;">
+                        <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;密码</span>
+                        <input type="text" class="form-control" id="upwd" disabled>
                     </div>
-                    <br>
                     <div class="input-group">
-                        <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;邮箱</span>
+                        <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;邮箱</span>
                         <input type="text" class="form-control" id="uemail">
                     </div>
-                    <br>
                     <div class="input-group">
                         <span class="input-group-addon">注册时间</span>
-                        <input type="text" class="form-control" id="ucreatedate">
+                        <input type="text" class="form-control" id="ucreatedate" disabled>
                     </div>
-                    <br>
                     <div class="input-group">
-                        <span class="input-group-addon">激活状态</span>
-                        <div align="center">
+                        <span class="input-group-addon">出生年月</span>
+                        <input type="text" class="form-control" id="userBirthday">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性别</span>
+                        <div align="center" style="height: 30px;border: 1px solid #ccc;border-radius:4px;">
                             <label class="radio-inline">
-                                <input type="radio" name="ustatus" id="ustatus1" value="1">激活&nbsp;&nbsp;
+                                <input type="radio" name="uSex" id="uSex1" value="1">男&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" name="ustatus" id="ustatus0" value="0">未激活&nbsp;&nbsp;&nbsp;
+                                <input type="radio" name="uSex" id="uSex0" value="0">女&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </label>
                         </div>
                     </div>
-                    <br>
                     <div class="input-group">
                         <span class="input-group-addon">人员类型</span>
-                        <div align="center">
+                        <div align="center" style="height: 30px;border: 1px solid #ccc;border-radius:4px;">
                             <input type="radio" name="role" id="role1" value="1">管理员&nbsp;&nbsp;&nbsp;</label>
                             <label class="radio-inline">
                                 <input type="radio" name="role" id="role0" value="0">普通用户</label>
                         </div>
                     </div>
-                    <br>-->
+                    <div class="input-group">
+                        <input type="hidden" id="userImge1"/>
+                        <span class="input-group-addon">用户头像</span>
+                        <div style="height: 110px;border: 1px solid #ccc;border-radius:4px;">
+                            <img src="" id="userImge" class="update_img"/>
+                            <form id="myForm"  method="post" enctype="multipart/form-data">
+                                <input id="img_update" class="file" name="file" type="file" accept="image/*">
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer col-md-offset-3">
@@ -164,5 +152,16 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!--  模态框end -->
+<script type="text/javascript">
+    //初始化fileinput控件（第一次初始化）
+    $('#img_update').fileinput({
+        'language': 'zh', //设置语言
+        'allowedFileExtensions': ['jpg', 'png', 'gif'],//接收的文件后缀,
+        'initialCaption': "更换头像",
+        'showUpload': false, //是否显示上传按钮
+        'showCaption': true,//是否显示标题
+        'showPreview':false, //是否显示预览
+    })
+</script>
 </body>
 </html>

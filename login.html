@@ -92,13 +92,13 @@
             <div class='icon'>
                 <img alt="" src='login/img/icon.png'>
             </div>
-            <input type="text" class="demo-input" placeholder="注册日期" id="createdate">
+            <input name="r_date"type="text" class="demo-input" placeholder="出生年月" id="cbirthday">
         </div>
         <div class="login_role">
             <input type="radio" name="personType" class="personType"
-                   value="0" checked>&nbsp;&nbsp;普通用户</input>&nbsp;&nbsp;&nbsp;
+                   value="1" checked>&nbsp;&nbsp;男</input>&nbsp;&nbsp;&nbsp;
             <input type="radio" name="personType" class="personType"
-                   value="1">&nbsp;&nbsp;管理人员</input>
+                   value="0">&nbsp;&nbsp;女</input>
         </div>
         <div class='login_fields__submit'>
             <input type='button' class="regit" value='注册'>
@@ -130,7 +130,7 @@
 <script type="text/javascript" src="login/js/jquery.mockjax.js"></script>
 <script>
     laydate.render({
-        elem: '#createdate' //指定元素
+        elem: '#cbirthday' //指定元素
     });
 </script>
 <script type="text/javascript">
@@ -161,11 +161,11 @@
         ctx.fillText(a, 0, 100);
     }
 
-    //判断用户名
+    //表单验证
     $(function () {
         /*触发失去焦点的事件 */
         $("#username").blur(function () {
-            var url = "http://localhost:8082/tbuser/selectByName";
+            var url = "http://localhost:8082/user/selectByName";
             var datas = {
                 "uname": $("#username").val()
             }
@@ -177,6 +177,22 @@
                 }
             });
         });
+
+        $("#userpwd").blur(function () {
+            var pwd = $('input[name="r_pwd"]').val();
+            if (pwd.length==0) {
+             ErroAlert('密码不能为空！');
+            } else if(pwd.length < 6){
+             ErroAlert('密码不能小于6位！');
+         }
+        });
+        $("#userpwd1").blur(function () {
+            if ($('input[name="r_pwd"]').val() != $('input[name="r_pwd1"]').val()) {
+                ErroAlert('两次输入密码不一致，请重新输入！');
+                $("#userpwd1").val("");
+            }
+        });
+
     });
     $(document).keypress(function (e) {
         // 回车键事件
@@ -235,30 +251,27 @@
 
             var name = $('input[name="r_name"]').val();
             var pwd = $('input[name="r_pwd"]').val();
-            var pwd1 = $('input[name="r_pwd1"]').val();
             var email = $('input[name="r_email"]').val();
             var rdate = $('input[name="r_date"]').val();
             var reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
             if (name == '') {
                 ErroAlert('用户名不能为空！');
-            } else if (pwd == '' || pwd1 == '') {
-                ErroAlert('密码不能为空！');
-            } else if (pwd != pwd1) {
-                ErroAlert('两次输入密码不一致，请重新输入！');
-                $("#userpwd1").val("");
             } else if (email == '' || email.search(reg) == -1) {
                 ErroAlert('邮箱格式错误！');
             } else if (rdate == '') {
                 ErroAlert('时间不能为空！');
             } else {
-                var url = "http://localhost:8082/tbuser/register";
+                var url = "http://localhost:8082/user/register";
+                var time = new Date().Format("yyyy-MM-dd HH:mm:ss");
                 var datas = {
-                    "username": $("#username").val(),
-                    "userpwd": $("#userpwd").val(),
-                    "email": $("#email").val(),
-                    "createdate": $("#createdate").val(),
-                    "userstatus": 0,
-                    "role": $("input[name='personType']:checked").val()
+                    "userName": name,
+                    "userPwd": pwd,
+                    "userEmail": email,
+                    "userBirthday": rdate,
+                    "userRdate": time,
+                    "userSex": $("input[name='personType']:checked").val(),
+                    "userRole": 0,
+                    "userImage":'morenIocnca97092eb2ae481291d02'
                 };
                 $.post(url, datas, function (result) {
                     if (result == 1) {
@@ -266,7 +279,7 @@
                         $("#userpwd").val("");
                         $("#userpwd1").val("");
                         $("#email").val("");
-                        $("#createdate").val("");
+                        $("#cbirthday").val("");
                         ErroAlert("注册成功！！！");
                     } else {
                         ErroAlert("注册失败！！！");
@@ -323,18 +336,19 @@
                 setTimeout(function () {
                     $('.authent').hide();
                     $('.login').removeClass('test');
-                    var url = "http://localhost:8082/tbuser/login";
+                    var url = "http://localhost:8082/user/login";
                     var datas = {
-                        "username": login,
-                        "userpwd": pwd
+                        "userName": login,
+                        "userPwd": pwd
                     }
                     $.post(url, datas, function (result) {
-                        if (result.username == null) {
+                        if (result.userName == null) {
                             ErroAlert("登录失败，用户或密码错误！！！");
                             Code();
                             $('input[name="code"]').val("");
-                        } else if (result.role != 1) {
-                            alert("该账户不能登录,如开通需通过卖家接口申请开通！");
+                        } else if (result.userRole != 1) {
+                            window.sessionStorage.setItem("user", JSON.stringify(result));
+                            alert("该账户不能登录,还请联系管理员！"+result.userRole);
                             $('input[name="login"]').val("");
                             $('input[name="pwd"]').val("");
                             $('input[name="code"]').val("");
@@ -348,6 +362,22 @@
             }
         })
     });
+    //格式化时间方法
+    Date.prototype.Format = function (fmt) {
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "H+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    };
     var fullscreen = function () {
         elem = document.body;
         if (elem.webkitRequestFullScreen) {

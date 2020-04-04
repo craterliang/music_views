@@ -14,6 +14,53 @@
         $('#addModal').on('hide.bs.modal', function () {
             $(".fileinput-remove-button").click();
         });
+
+        //表单监控
+        $(function () {
+            /*触发失去焦点的事件 */
+            //监控歌手名称
+            $("#singerNameAdd").blur(function () {
+                if ($("#singerNameAdd").val()==""){
+                    $("#singerUsable").replaceWith("<label class='input-group-addon label-danger ' id='singerUsable'>不能为空</label>");
+                    $("#addSingerCommit").attr("disabled", true);
+                }else{
+                var url = "http://localhost:8082/singer/selectByName";
+                var datas = {
+                    "uname": $("#singerNameAdd").val()
+                };
+                $.post(url, datas, function (result) {
+                    if (result.singerId == ""|| result.singerId==null || result.singerId==undefined) {
+                        $("#singerUsable").replaceWith( "<label class='input-group-addon label-success ' id='singerUsable'>可用</label>");
+                        $("#addSingerCommit").attr("disabled", false);
+                    } else {
+                        $("#singerUsable").replaceWith( "<label class='input-group-addon label-danger ' id='singerUsable'>不可用</label>");
+                        $("#addSingerCommit").attr("disabled", true);
+                    }
+                });
+                }
+            });
+            //修改歌手
+            $("#singerName").blur(function () {
+                if ($("#singerName").val()==""){
+                    $("#singerUsable1").replaceWith( "<label class='input-group-addon label-danger ' id='singerUsable1'>不能为空</label>");
+                    $("#updateSinger").attr("disabled", true);
+                }else {
+                    var url = "http://localhost:8082/singer/selectByName";
+                    var datas = {
+                        "uname": $("#singerName").val()
+                    }
+                    $.post(url, datas, function (result) {
+                        if (result.singerId == "" || result.singerId == null || result.singerId == undefined || result.singerId == $("#userId").val()) {
+                            $("#singerUsable1").replaceWith("<label class='input-group-addon label-success ' id='singerUsable1'>可用</label>");
+                            $("#updateSinger").attr("disabled", false);
+                        } else {
+                            $("#singerUsable1").replaceWith("<label class='input-group-addon label-danger ' id='singerUsable1'>不可用</label>");
+                            $("#updateSinger").attr("disabled", true);
+                        }
+                    });
+                }
+            });
+        });
         function showSinger(pageNumber) {
 
             var url = "http://localhost:8082/singer/findAll";

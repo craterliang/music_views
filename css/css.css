@@ -63,6 +63,9 @@ td, th {
 #userAdd > div {
     margin-top: 7px;
 }
+#songUp > div {
+    margin-top: 7px;
+}
 .tdColor {
     border: 1px solid #dcdbdb;
     height: 40px;

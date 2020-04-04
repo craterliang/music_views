@@ -1,80 +1,52 @@
-//protable表js文件
+//songtable表js文件
 
 $(function () {
+    showsingerAll();
 
-   /* //加载商品类别信息/品牌信息
-    var catalogurl = "http://localhost:8082/tbcatalog/findAllTbcatalog";
-    var brandurl = "http://localhost:8082/tbbrand/findAllTbbrand";
+    //加载歌手列表
+    function showsingerAll() {
+    var singerurl = "http://localhost:8082/singer/findAllSinger";
     $.ajax({
         type: "post",
-        url: catalogurl,
+        url: singerurl,
         async: false,
         success: function (result) {
             if (result.length > 0) {
-                var selectcatalogid = $("#catalogid");
-                var updatecatalogid = $("#catalogid_update");
-                var addcatalogid = $("#catalogid_add");
-                selectcatalogid.find("option").remove();
-                updatecatalogid.find("option").remove();
-                addcatalogid.find("option").remove();
-                var opt = $("<option value='-1'>商品类别</option>");
-                selectcatalogid.append(opt);
-                showcatalog(selectcatalogid);
-                showcatalog(updatecatalogid);
-                showcatalog(addcatalogid);
-
-                // 循环显示数据信息
-                function showcatalog(allcatalogid) {
-
-                    for (let i = 0; i < result.length; i++) {
-                        if(result[i].showflag==1){
-                        let option = $("<option value='" + result[i].id + "'>" + result[i].catalog + "</option>");
-                        allcatalogid.append(option);
-                        }
-                    }
-                }
-            }
-        }
-    });*/
-    /*$.ajax({
-        type: "post",
-        url: brandurl,
-        async: false,
-        success: function (result) {
-            if (result.length > 0) {
-                let selectbrandid = $("#brandid");
-                let updatetbrandid = $("#brandid_update");
-                let addtbrandid = $("#brandid_add");
-                selectbrandid.find("option").remove();
-                let opt = $("<option value='-1'>所有品牌</option>");
-                selectbrandid.append(opt);
-                showTbrand(selectbrandid);
-                showTbrand(updatetbrandid);
-                showTbrand(addtbrandid);
-
-                function showTbrand(alltbrandid) {
+                let singerAdd = $("#singerAdd");
+                let singerup = $("#singerUp");
+                singerAdd.find("option").remove();
+                //let opt = $("<option value='-1'>歌手</option>");
+                //singerAdd.append(opt);
+                showSinger(singerAdd);
+                showSinger(singerup);
+                function showSinger(singerAdd) {
                     for (var i = 0; i < result.length; i++) {
-                        var option = $("<option value='" + result[i].brandid + "'>" + result[i].brandname + "</option>");
-                        alltbrandid.append(option);
+                        var option = $("<option value='" + result[i].singerId + "'>" + result[i].singerName + "</option>");
+                        singerAdd.append(option);
                     }
                 }
 
             }
         }
-    });//加载信息  end*/
-
-    //自动加载列表
+    });//加载信息
+    }
+    //自动加载歌曲列表
     showSong(1);
+    //定义一个值未页码
     var pageNum;
-    //监控模态框
+    /*监控模态框
+    当模态框打开时清空模态框中的内容*/
     $('#myModal').on('hide.bs.modal', function () {
         $(".fileinput-remove-button").click();
     });
     $('#addModal').on('hide.bs.modal', function () {
         $(".fileinput-remove-button").click();
     });
+    $('#addModalNext').on('hide.bs.modal', function () {
+        $(".fileinput-remove-button").click();
+    });
 
-    //查询按钮
+    //查找按钮
     $("#findButton").click(function () {
         showSong(1);
     });
@@ -82,12 +54,9 @@ $(function () {
     $("#addButton").click(function () {
         $('#addModal').modal('show');
     });
-    //添加商品提交按钮
+    //添加歌曲 提交按钮
     $("#addSongBtn").click(function () {
-        $('#addModal').modal('hide');
-        addSong(data);
-
-        /*if (document.getElementById("audio_add").value == null || document.getElementById("audio_add").value === undefined) {
+        if (document.getElementById("audio_add").value == null || document.getElementById("audio_add").value === undefined) {
             alert("请选择歌曲");
         } else {
             var formData = new FormData($("#myForm_add")[0]);
@@ -102,68 +71,87 @@ $(function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    //alert("成功了:"+data.songName+"--"+data.singerName+"--"+data.album+"--"+data.duration+"--"+data.uuid)
-                    $('#addModal').modal('hide');
+                     $('#addModal').modal('hide');
                     addSong(data);
+                    $('#addModalNext').modal('show');
+                    $("#songNameAdd").val(data.songName);
+                    $("#albumAdd").val(data.album);
+                    $("#duration").val(data.duration);
+                    $("#songPath").val(data.uuid);
                 },
                 error: function (returndata) {
-                    alert("失败了！图片没有添加成功");
-                    //请求异常的回调
+                    alert("失败了！歌曲没有添加成功");
                 }
             });
-        }*/
+        }
+
     });
-
-    //添加歌曲
-    function addSong(data) {
-        $('#addModalNext').modal('show');
-
-        var url = "http://localhost:8082/tbproduct/insertProduct";
+    //歌曲所有信息提交
+    $("#addSongBtnNext").click(function () {
+        var url = "http://localhost:8082/song/insertSong";
         var datas = {
-            "productname": $("#productname_add").val(),
-            "productsn": $("#productsn_add").val(),
-            "catalogid": $("#catalogid_add").val(),
-            "brandid": $("#brandid_add").val(),
-            "price": $("#price_add").val(),
-            "saleamount": $("#saleamount_add").val(),
-            "saleprice": $("#saleprice_add").val(),
-            "serialno": $("#serialno_add").val(),
-            "weight": $("#weight_add").val(),
-            "productdesc": $("#productdesc_add").val(),
-            "productdetail": $("#productdetail_add").val(),
-            "productremark": $("#productremark_add").val(),
-            "amount": $("#amount_add").val(),
-            "showflag": show,
-            "payflag": pay,
-            "goodflag": good,
-            "picpath": data,
+            "singerId": $("#singerAdd").val(),
+            "songName": $("#songNameAdd").val(),
+            "songStyle": $("#songStyleAdd").val(),
+            "songLangue": $("#songLuaAdd").val(),
+            "songPath": $("#songPath").val(),
+            "songTime": $("#duration").val(),
+            "songAlbum": $("#albumAdd").val()
         };
         $.post(url, datas, function (result) {
-            $('#addModal').modal('hide');
-            if (result == 1) {
-                alert("添加商品成功");
-                showSong(1);
-                $("#productname_add").val("");
-                $("#productsn_add").val("");
-                $("#price_add").val("");
-                $("#saleamount_add").val("");
-                $("#saleprice_add").val("");
-                $("#serialno_add").val("");
-                $("#weight_add").val("");
-                $("#productdesc_add").val("");
-                $("#productdetail_add").val("");
-                $("#productremark_add").val("");
-                $("#amount_add").val("");
-                $("#showflag_add").prop("checked", false);
-                $("#goodflag_add").prop("checked", false);
-                $("#payflag_add").prop("checked", false);
-            } else {
-                ErroAlert("添加商品失败！！！");
+            if(result==1){
+                alert("添加成功！");
+                $('#addModalNext').modal('hide');
+                showSong(pageNum);
+            }
+        });
+    });
+    //添加歌曲
+    function addSong(data) {
+        //判断是否有歌手信息
+        var url = "http://localhost:8082/singer/selectByName";
+        var datas = {
+            "uname": data.singerName
+        };
+        $.post(url, datas, function (result) {
+            //如没有歌手信息调用自动添加歌手函数添加函数
+            if (result.singerId == ""|| result.singerId==null || result.singerId == undefined) {
+                addSinger(data.singerName);
+            }else{
+                $("#singerAdd").val(result.singerId);
             }
 
         });
-    }//添加商品  end
-    //显示商品列表
+
+    }
+
+    //添加歌手
+    function addSinger(singerName) {
+        var url = "http://localhost:8082/singer/insert";
+        var datas = {
+            "singerName": singerName,
+            "singerType": "",
+            "singerDesc": "",
+            "singerSex": "",
+            "singerImage": "",
+        };
+        $.post(url, datas, function (result) {
+            if (result == 1) {
+                alert("本库没有歌手："+singerName+" :的信息，现已经同步添加到歌手库，记得完善歌手信息");
+            }
+            var url = "http://localhost:8082/singer/selectByName";
+            var datas = {
+                "uname": singerName
+            };
+            $.post(url, datas, function (result) {
+                showsingAll();
+                $("#singerAdd").val(result.singerId);
+            });
+
+        });
+    }
+
+    //显示歌曲列表函数
     function showSong(pageNumber) {
         var url = "http://localhost:8082/song/findSongColumn";
         var datas = {
@@ -177,12 +165,11 @@ $(function () {
             var tbody = $("#songMsg");
             tbody.find("tr").remove();
             var productList = result.list;
-            //进数据库  没有符合条件的数据
             if (productList == 0) {
                 alert("没有符合条件的数据")
                 var li = $("#pagenums1");
                 li.find("a").remove();
-                tbody.append(tr);
+                tbody.append("");
             } else {
                 pageNum = result.pageNum;
                 var pageSize = result.pageSize;
@@ -240,43 +227,22 @@ $(function () {
 
                 }//  分页  END
 
-                //根据根据Id获取对象信息
+                //修改数据，点击按钮根据根据Id获取对象信息
                 $(".updateBtn").click(function () {
                     $('#myModal').modal('show');
-                    var url = "http://localhost:8082/tbproduct/selectProductById";
+                    var url = "http://localhost:8082/song/selectSongById";
                     var datas = {
                         "Id": $(this).attr("href")
                     };
-                    $("#productId").val($(this).attr("href"));
+                    $("#songIdUp").val($(this).attr("href"));
                     $.post(url, datas, function (result) {
-                        $("#picpath1").val(result.picpath);
-                        $("#imgup").attr('src', "http://localhost:8082/" + result.picpath + ".jpg");
-                        $("#productname_update").val(result.productname);
-                        $("#productsn_update").val(result.productsn);
-                        $("#catalogid_update").val(result.catalogid);
-                        $("#brandid_update").val(result.brandid);
-                        $("#price_update").val(result.price);
-                        $("#saleprice_update").val(result.saleprice);
-                        $("#saleamount_update").val(result.saleamount);
-                        $("#amount_update").val(result.amount);
-                        $("#serialno_update").val(result.serialno);
-                        $("#weight_update").val(result.weight);
-                        $("#productdesc_update").val(result.productdesc);
-                        $("#productdetail_update").val(result.productdetail);
-                        $("#productremark_update").val(result.productremark);
-                        $("#showflag_update").val(result.showflag);
-                        $("#goodflag_update").val(result.goodflag);
-                        $("#payflag_update").val(result.payflag);
-
-                        if (result.showflag == 1) {
-                            $("#showflag_update").prop("checked", true);
-                        }
-                        if (result.goodflag == 1) {
-                            $("#goodflag_update").prop("checked", true);
-                        }
-                        if (result.payflag == 1) {
-                            $("#payflag_update").prop("checked", true);
-                        }
+                        $("#songNameUp").val(result.songName);
+                        $("#singerUp").val( result.singerId );
+                        $("#songStyleUp").val(result.songStyle);
+                        $("#songLuaUp").val(result.songLangue);
+                        $("#albumUp").val(result.songAlbum);
+                        $("#durationUp").val(result.songTime);
+                        $("#songPathUp").val(result.songPath);
                     });
                     return false;
                 });
@@ -299,81 +265,26 @@ $(function () {
                     return false;
                 });
 
-                //图片管理
-                $(".productImg").click(function () {
-                    var id= $(this).attr("href");
-                    window.location.href = "productImg.html?id=" + id;
-
-                    return false;
-                });
             }
 
         });
 
-    }//显示列表  end
+    }//显示歌曲列表  end
 
 
-    //更行商品信息
-    //更新图片
-    $("#updateProduct").click(function () {
-        if (document.getElementById("img_update").value == null || document.getElementById("img_update").value == "") {
-            updateProduct($("#picpath1").val(),0);
-        } else {
-            var formData = new FormData($("#myForm")[0]);
-            $.ajax({
-                //接口地址
-                url: 'http://localhost:8082/ImgUpload',
-                type: 'POST',
-                dateType: "JSON",
-                data: formData,
-                async: false,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    updateProduct(data,1);
-                },
-                error: function (returndata) {
-                    alert("图片修改失败了");
-                }
-            });
-        }
-    });//更新图片 end
-    //修改数据
-    function updateProduct(data,upBool) {
-        var show = 0;
-        var pay = 0;
-        var good = 0;
-        if ($("input[id='showflag_update']:checked").val()) {
-            show = 1;
-        }
-        if ($("input[id='payflag_update']:checked").val()) {
-            pay = 1;
-        }
-        if ($("input[id='goodflag_update']:checked").val()) {
-            good = 1;
-        }
-        var url = "http://localhost:8082/tbproduct/updateProduct";
+    //修改数据，提交
+    $("#addSongBtnUp").click(function () {
+
+        var url = "http://localhost:8082/song/updateSong";
         var datas = {
-            "id": $("#productId").val(),
-            "productname": $("#productname_update").val(),
-            "productsn": $("#productsn_update").val(),
-            "catalogid": $("#catalogid_update").val(),
-            "brandid": $("#brandid_update").val(),
-            "price": $("#price_update").val(),
-            "saleamount": $("#saleamount_update").val(),
-            "saleprice": $("#saleprice_update").val(),
-            "serialno": $("#serialno_update").val(),
-            "weight": $("#weight_update").val(),
-            "productdesc": $("#productdesc_update").val(),
-            "productdetail": $("#productdetail_update").val(),
-            "productremark": $("#productremark_update").val(),
-            "amount": $("#amount_update").val(),
-            "showflag": show,
-            "payflag": pay,
-            "goodflag": good,
-            "picpath": data,
-            "upBool":upBool
+            "songId": $("#songIdUp").val(),
+            "songName": $("#songNameUp").val(),
+            "singerId": $("#singerUp").val(),
+            "songStyle": $("#songStyleUp").val(),
+            "songLangue": $("#songLuaUp").val(),
+            "songAlbum": $("#albumUp").val(),
+            "songTime": $("#durationUp").val(),
+            "songPath": $("#songPathUp").val(),
         };
         $.post(url, datas, function (result) {
             $('#myModal').modal('hide');
@@ -384,5 +295,6 @@ $(function () {
                 ErroAlert("修改失败！！！");
             }
         });
-    }
+    });//修改数据 end
+
 });

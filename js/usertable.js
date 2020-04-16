@@ -44,7 +44,7 @@
                         tr.append("<td>" + userList[i].userEmail + "</td>");
                         tr.append("<td >" + userList[i].userBirthday.substring(0, 10) + "</td>");
                         tr.append("<td >" + userList[i].userRdate + "</td>");
-                        tr.append("<td><img src='http://localhost:8082/img/" + userList[i].userImage + ".jpg' width='40px' height='40px' /></td>");
+                        tr.append("<td><img src='http://localhost:8082/img/" + userList[i].userImage + ".jpg' width='40px' height='40px' class='img-circle'/></td>");
                         /*tr.append("<td>" + userList[i].userImage + "</td>");*/
 
                         if (userList[i].userRole == 1) {

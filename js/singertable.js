@@ -84,7 +84,7 @@
                         var tr = $("<tr></tr>");
                         tr.append("<td>" + singerList[i].singerId + "</td>");
                         tr.append("<td>" + singerList[i].singerName + "</td>");
-                        tr.append("<td><img src='http://localhost:8082/img/" + singerList[i].singerImage + ".jpg' width='40px' height='40px' /></td>");
+                        tr.append("<td><img src='http://localhost:8082/img/" + singerList[i].singerImage + ".jpg' width='40px' height='40px' class='img-circle'/></td>");
                         if (singerList[i].singerSex == 1) {
                             tr.append("<td>男</td>");
                         } else {

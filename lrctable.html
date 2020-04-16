@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/css.css"/>
+    <link rel="stylesheet" type="text/css" href="css/fileinput.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="bootstrap-3.3.7-dist/js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/fileinput.js"></script>
+    <script type="text/javascript" src="js/fileinput_locale_zh.js"></script>
+    <script type="text/javascript" src="js/lrctable.js"></script>
+</head>
+<body>
+<div id="pageAll">
+    <div class="pageTop">
+        <div class="page">
+            <img src="img/coin02.png"/><span><a href="main.html">首页</a> / 歌曲管理 /</span>&nbsp;歌词管理
+        </div>
+    </div>
+
+    <div class="page">
+        <!-- user页面样式 -->
+        <div class="connoisseur">
+            <div class="conform">
+                <div class="cfD">
+                    <input class="vinput vpr" type="text" id="LrcName" placeholder="歌词名称"/>
+                    <button class="catalogbtn" id="findButton">查询</button>
+                    <button class="catalogbtn" id="AddButton" >添加</button>
+                </div>
+            </div>
+            <div class="table_top">
+                <!-- user 表格 显示 -->
+                <div class="conShow panel-body">
+                    <table border="1" cellspacing="0" cellpadding="0" class="table">
+                        <thead>
+                        <tr>
+                            <th class="tdColor">序号</th>
+                            <th class="tdColor">歌词名称</th>
+                            <th class="tdColor">歌词路径</th>
+                            <th class="tdColor">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody th:remove="all-but-first" id="catalogMsg">
+                        <tr>
+                            <td colspan="3">没有查到相应的数据！！！</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!--分页 展示 部分 -->
+                    <div align="center">
+                        <ul class="pagination" id="pagenums1">
+                            <li>
+                                <a href="#" class="btn btn-default">1</a>
+                            </li>
+                        </ul>
+                    </div>  <!-- 分页展示部分  end-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close glyphicon glyphicon-remove" data-dismiss="modal"
+                        aria-hidden="true">
+                </button>
+                <h5 class="modal-title" id="addModalLabel">
+                    添加歌词
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div style="padding: 10px 100px 10px;">
+                    <div class="input-group">
+                        <span class="input-group-addon">添加歌词</span>
+                        <form id="myForm_add" method="post" enctype="multipart/form-data">
+                            <input  type="file" class="file" name="file[]" id="inputfile" multiple webkitdirectory />
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer col-md-offset-3">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="addLrcBtn">
+                    添加
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!--  模态框end -->
+<script >
+    $('#inputfile').fileinput({
+        'language': 'zh', //设置语言
+        'allowedFileExtensions': ['lrc'],//接收的文件后缀,
+        'showUpload': false, //是否显示上传按钮
+        'showPreview':false, //是否显示预览
+    })
+</script>
+</body>
+</html>
